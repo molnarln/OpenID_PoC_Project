@@ -10,7 +10,6 @@ using OpenID_poc1.Services;
 
 namespace OpenID_poc1.Controllers
 {
-    [Route("/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -24,10 +23,18 @@ namespace OpenID_poc1.Controllers
         }
 
         [Authorize]
-        [HttpGet]
+        [HttpGet("/auth")]
         public IActionResult Get()
         {
-            return Ok(new { OpenId = authService.GetUserEmail(User) });
+            return Ok(new { emailAdress = authService.GetUserEmail(User) });
+        }
+
+        [Authorize]
+        [HttpGet("/resource1")]
+        public IActionResult Resource1()
+        {
+            return Ok(new { status = "you are authorized!" });
+
         }
     }
 }
