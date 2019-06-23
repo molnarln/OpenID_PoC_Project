@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +28,42 @@ namespace OpenID_poc1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //services
+            //.AddAuthentication()
+            //.AddOpenIdConnect(
+            //    authenticationScheme: "Google",
+            //    displayName: "Google",
+            //    options =>
+            //    {
+            //        options.Authority = "https://accounts.google.com/";
+            //        options.ClientId = Configuration["Authentication:Google:ClientId"];
+            //        options.CallbackPath = "/signin-google";
+            //        options.SignedOutCallbackPath = "/signout-callback-google";
+            //        options.RemoteSignOutPath = "/signout-google";
+            //        options.Scope.Add("email");
+            //    });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect(options =>
+            {
+
+                options.Authority = "https://accounts.google.com/";
+                options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.CallbackPath = "/signin-google";
+                options.SignedOutCallbackPath = "/signout-callback-google";
+                options.RemoteSignOutPath = "/signout-google";
+                options.Scope.Add("email");
+                options.ResponseType = "code";
+                options.GetClaimsFromUserInfoEndpoint = true;
+            }
+            );
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,7 +77,7 @@ namespace OpenID_poc1
             {
                 app.UseHsts();
             }
-
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
