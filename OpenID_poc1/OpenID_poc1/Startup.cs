@@ -49,6 +49,7 @@ namespace OpenID_poc1
                 options.Scope.Add("email");
                 options.ResponseType = "code";
                 options.GetClaimsFromUserInfoEndpoint = true;
+                
             }
             );
 
