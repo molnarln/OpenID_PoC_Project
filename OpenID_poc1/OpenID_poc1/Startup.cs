@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenID_poc1.Services;
 
 namespace OpenID_poc1
 {
@@ -29,20 +30,6 @@ namespace OpenID_poc1
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            //services
-            //.AddAuthentication()
-            //.AddOpenIdConnect(
-            //    authenticationScheme: "Google",
-            //    displayName: "Google",
-            //    options =>
-            //    {
-            //        options.Authority = "https://accounts.google.com/";
-            //        options.ClientId = Configuration["Authentication:Google:ClientId"];
-            //        options.CallbackPath = "/signin-google";
-            //        options.SignedOutCallbackPath = "/signout-callback-google";
-            //        options.RemoteSignOutPath = "/signout-google";
-            //        options.Scope.Add("email");
-            //    });
 
             services.AddAuthentication(options =>
             {
@@ -55,6 +42,7 @@ namespace OpenID_poc1
 
                 options.Authority = "https://accounts.google.com/";
                 options.ClientId = Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
                 options.CallbackPath = "/signin-google";
                 options.SignedOutCallbackPath = "/signout-callback-google";
                 options.RemoteSignOutPath = "/signout-google";
@@ -63,6 +51,8 @@ namespace OpenID_poc1
                 options.GetClaimsFromUserInfoEndpoint = true;
             }
             );
+
+            services.AddScoped<AuthService>();
 
         }
 
