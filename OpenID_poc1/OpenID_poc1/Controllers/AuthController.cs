@@ -24,17 +24,16 @@ namespace OpenID_poc1.Controllers
 
         [Authorize]
         [HttpGet("/auth")]
-        public IActionResult Get()
+        public IActionResult Authenticate()
         {
             return Ok(new { emailAdress = authService.GetUserEmail(User) });
         }
 
         [Authorize]
-        [HttpGet("/resource1")]
-        public IActionResult Resource1()
+        [HttpGet("/name")]
+        public IActionResult GetName()
         {
-            return Ok(new { status = "you are authorized!" });
-
+            return Ok(new { name = authService.GetUserName(User) });
         }
     }
 }

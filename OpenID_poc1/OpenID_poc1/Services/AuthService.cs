@@ -20,14 +20,29 @@ namespace OpenID_poc1.Services
         {
             if (user == null)
             {
-                throw new Exception();
+                throw new Exception("User not found");
             }
             string userEmail = user.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
             if (userEmail == null)
             {
-                throw new Exception();
+                throw new Exception("Email not found");
             }
             return userEmail;
+        }
+
+        public string GetUserName(ClaimsPrincipal user)
+        {
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            string givenName = user.Claims.First(claim => claim.Type == ClaimTypes.GivenName).Value;
+            string surname = user.Claims.First(claim => claim.Type == ClaimTypes.Surname).Value;
+            if (givenName == null && surname == null)
+            {
+                throw new Exception("Username not found");
+            }
+            return givenName + " " + surname;
         }
     }
 }
